@@ -38,10 +38,12 @@ function random(){
 var add=function(a,b){
   return a+b
 }
+
 const GURL =  'https://www.gcores.com/talks/'
 const domparser = new DOMParser()
 const GTbtn = '<span class="globalActions_item GTK_btn"  target="_blank"><div><svg t="1648725115646" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21619" width="24" height="24"><path d="M677.6 389.78v-82H343.21v82z m186.5 369.07H274.62c-21.71 0-39.3 18.36-39.3 41s17.59 41 39.3 41H864.1v82H274.62c-65.12 0-117.9-55.08-117.9-123v-615.1c0-45.3 35.19-82 78.6-82H864.1z" p-id="21620" fill="#f44336"></path></svg></div><p>机组</p></span>';
 const GTCon = '<span class="GTK_con"><div class="GTK_content"><div class="GTK_talk_load_new">加载更新机博</div><div class="GTK_talk_list"></div><div class="GTK_talk_load_old">加载更多</div></div></span>';
+const GitUrl = 'https://github.com/TOKdawn/gcores-talks-Viewer/blob/main/crawler/TID.html'
 var startTID = 1232; //已经加载的最新鸡脖 大值
 var endTID = 1232; //已经加载的最旧鸡脖 小值
 var topTID = { // 目前最新的鸡脖ID 更新时间 最大值
@@ -60,9 +62,46 @@ function onDocumentStart(){
   $('body').append($(GTbtn))
   $('body').append($(GTCon))
   $('.GTK_btn').off().on('click', showGTK)
+  var time = Date.parse( new Date())
+  var localTID = localStorage.getItem('GTK_TID_DATA')
+  if(localTID){
+    localTID = JSON.parse(localTID)
+    if(time - localTID.time > 1000*60){ //超过1分钟未更新
+      updataTID()
+    }else{
+      anchorTID.id = localTID.id //拿取缓存的TID
+      localTID.time = time
+      localStorage.setItem('GTK_TID_DATA', JSON.stringify(localTID))//更新时间戳
+    }
+  }else{
+    updataTID()
+  }
   addStyle();
 }
 
+function updataTID(){
+  GM_xmlhttpRequest({
+    method: 'GET',
+    url: GitUrl, //获取对应编号鸡脖
+    timeout: 2000,
+    onload: function (xhr) {
+        var html = domparser.parseFromString(xhr.responseText.replace('visibility:hidden',' '),'text/html') //处理带图像鸡脖显示并且转换为Document
+        if(html){
+          console.log('获取最新鸡脖ID成功',html,html.innerText,  Date.parse( new Date()))
+          var time = Date.parse( new Date())
+        }
+    },
+    onerror: function (xhr) {
+      console.log('拿取gitID失败', xhr,'id:',anchorTID.id - i);
+    },
+    ontimeout: function (xhr) {
+      console.log('拿取gitID超时:', xhr, 'id:',anchorTID.id - i);
+    },
+    onabort:function (xhr) {
+      console.log('拿取gitID中止:', xhr, 'id:',anchorTID.id - i);
+    }
+  })
+}
 function addStyle(){
   //入口Btn样式
   GM_addStyle(`
