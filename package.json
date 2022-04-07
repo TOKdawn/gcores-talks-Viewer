@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/TOKdawn/gcores-talks-Viewer#readme",
   "dependencies": {
+    "cheerio": "*",
     "fs": "*",
     "marked": "^4.0.12"
   }
