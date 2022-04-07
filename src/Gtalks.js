@@ -40,10 +40,12 @@ var add=function(a,b){
 }
 
 const GURL =  'https://www.gcores.com/talks/'
+
 const domparser = new DOMParser()
 const GTbtn = '<span class="globalActions_item GTK_btn"  target="_blank"><div><svg t="1648725115646" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21619" width="24" height="24"><path d="M677.6 389.78v-82H343.21v82z m186.5 369.07H274.62c-21.71 0-39.3 18.36-39.3 41s17.59 41 39.3 41H864.1v82H274.62c-65.12 0-117.9-55.08-117.9-123v-615.1c0-45.3 35.19-82 78.6-82H864.1z" p-id="21620" fill="#f44336"></path></svg></div><p>机组</p></span>';
 const GTCon = '<span class="GTK_con"><div class="GTK_content"><div class="GTK_talk_load_new">加载更新机博</div><div class="GTK_talk_list"></div><div class="GTK_talk_load_old">加载更多</div></div></span>';
 const GitUrl = 'https://github.com/TOKdawn/gcores-talks-Viewer/blob/main/crawler/TID.html'
+var loadFlag = false
 var startTID = 1232; //已经加载的最新鸡脖 大值
 var endTID = 1232; //已经加载的最旧鸡脖 小值
 var topTID = { // 目前最新的鸡脖ID 更新时间 最大值
@@ -203,6 +205,11 @@ function addStyle(){
     background-color: #f7f7f7;
   }
 `)
+  GM_addStyle(`
+  .GTK_talk_item {  
+    border-bottom: 1px solid #f4f4f4;
+  }
+  `)
 }
 
 function showGTK() {
@@ -215,7 +222,7 @@ function showGTK() {
   $('.GTK_con').on('click',function(e){
     e.stopPropagation() //阻止冒泡
   })
-  loadData('NEW');
+  !loadFlag && loadData('NEW');
 }
 
 function hideGTK() {
@@ -224,6 +231,7 @@ function hideGTK() {
   $('.navLayout').unbind('click',hideGTK)
 }
 function loadData(type) {
+ 
   var DOM = $('.GTK_talk_list')
   var tklist = []
   var PromiseList = []
@@ -240,6 +248,7 @@ function loadData(type) {
     }
   }else {
     startTID =  anchorTID.id
+    loadFlag = true
   }
   for(var index = 0; index < 5; index++){ //每次加载5条
     PromiseList[index] = new Promise(function(resolve, reject){//构建Promise
