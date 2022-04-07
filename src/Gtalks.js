@@ -69,7 +69,7 @@ function onDocumentStart(){
     if(time - localTID.time > 1000*60){ //超过1分钟未更新
       updataTID()
     }else{
-      anchorTID.id = localTID.id //拿取缓存的TID
+      anchorTID.id = localTID.id-0 //拿取缓存的TID
       localTID.time = time
       localStorage.setItem('GTK_TID_DATA', JSON.stringify(localTID))//更新时间戳
     }
@@ -85,10 +85,16 @@ function updataTID(){
     url: GitUrl, //获取对应编号鸡脖
     timeout: 2000,
     onload: function (xhr) {
-        var html = domparser.parseFromString(xhr.responseText.replace('visibility:hidden',' '),'text/html') //处理带图像鸡脖显示并且转换为Document
+        var html = domparser.parseFromString(xhr.responseText,'text/html') 
         if(html){
-          console.log('获取最新鸡脖ID成功',html,html.innerText,  Date.parse( new Date()))
-          var time = Date.parse( new Date())
+          var content = html.querySelector('.blob-code-inner') //拿取git库中锚点ID
+          if(content.innerText){
+            anchorTID.id = content.innerText-0
+            anchorTID.time = Date.parse( new Date())
+            localStorage.setItem('GTK_TID_DATA', JSON.stringify(anchorTID))
+          }else{
+            console.log('获取gitTID失败')
+          }
         }
     },
     onerror: function (xhr) {
