@@ -1,0 +1,22 @@
+{
+  "name": "gcores-talks-viewer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TOKdawn/gcores-talks-Viewer.git"
+  },
+  "author": "TOKDawn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TOKdawn/gcores-talks-Viewer/issues"
+  },
+  "homepage": "https://github.com/TOKdawn/gcores-talks-Viewer#readme",
+  "dependencies": {
+    "fs": "*",
+    "marked": "^4.0.12"
+  }
+}

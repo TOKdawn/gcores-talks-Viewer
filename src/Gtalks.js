@@ -327,7 +327,7 @@ function imgChange(){
   }else{
     console.log('轮播图错误TID:',Tid,'index:', nowNUM);
   }
-  return
+  return 
 }
 onDocumentStart();
 })();
