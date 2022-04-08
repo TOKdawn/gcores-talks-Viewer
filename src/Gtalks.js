@@ -118,7 +118,7 @@ function addStyle(){
     position: fixed;
     display: block;
     right: calc(1.125rem + 0.83333vw);
-    bottom: calc(10rem + 0.83333vw );
+    bottom: calc(10rem + 7.33333vw );
     background: var(--gray-global-action-bg);
     color: #f44336;
     cursor: pointer;

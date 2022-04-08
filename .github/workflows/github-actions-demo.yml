@@ -1,0 +1,35 @@
+name: Node.js CI
+
+on:
+#   schedule:
+#      - cron: '0,30 * * * *'  
+  push:
+
+jobs:
+  job_1:
+    name: Node Crawler
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      
+    - name: Setup Node.js for use with actions
+      uses: actions/setup-node@v2.4.0
+    - name: Install Dependence
+      run: npm install
+    - name: updata HTML
+      run: node crawler
+
+    - name: Upload to this repo
+      run: |
+        git config --global user.name "Dawn inShadow"
+        git config --global user.email "dawninshadow0.0@gmail.com"
+        git add crawler && echo A
+        git commit -m 'upload TID result' && echo B
+        git push -u origin main && echo C
+        
+    - name: Failure test
+      if: failure()
+      run: | 
+        ls
+        echo 55555  
