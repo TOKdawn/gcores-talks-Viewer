@@ -21,30 +21,30 @@
 // @description    Usercript with GM_addStyle method.
 // ==/UserScript==
 function GM_addStyle(css) {
-  const style = document.getElementById("GM_addStyleByTOKDawn") || (function() {
-    const style = document.createElement('style');
+  var style = document.getElementById("GM_addStyleByTOKDawn") || (function() {
+    var style = document.createElement('style');
     style.type = 'text/css';
     style.id = "GM_addStyleByTOKDawn";
     document.head.appendChild(style);
     return style;
   })();
-  const sheet = style.sheet;
+  var sheet = style.sheet;
   sheet.insertRule(css, (sheet.rules || sheet.cssRules || []).length);
 }
-
+ 
 function random(){
   return  Math.ceil(Math.random()*500); 
 }
 var add=function(a,b){
   return a+b
 }
-
-const GURL =  'https://www.gcores.com/talks/'
-
-const domparser = new DOMParser()
-const GTbtn = '<span class="globalActions_item GTK_btn"  target="_blank"><div><svg t="1648725115646" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21619" width="24" height="24"><path d="M677.6 389.78v-82H343.21v82z m186.5 369.07H274.62c-21.71 0-39.3 18.36-39.3 41s17.59 41 39.3 41H864.1v82H274.62c-65.12 0-117.9-55.08-117.9-123v-615.1c0-45.3 35.19-82 78.6-82H864.1z" p-id="21620" fill="#f44336"></path></svg></div><p>机组</p></span>';
-const GTCon = '<span class="GTK_con"><div class="GTK_content"><div class="GTK_talk_load_new">加载更新机博</div><div class="GTK_talk_list"></div><div class="GTK_talk_load_old">加载更多</div></div></span>';
-const GitUrl = 'https://github.com/TOKdawn/gcores-talks-Viewer/blob/main/crawler/TID.html'
+ 
+var GURL =  'https://www.gcores.com/talks/'
+ 
+var domparser = new DOMParser()
+var GTbtn = '<span class="globalActions_item GTK_btn"  target="_blank"><div><svg t="1648725115646" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21619" width="24" height="24"><path d="M677.6 389.78v-82H343.21v82z m186.5 369.07H274.62c-21.71 0-39.3 18.36-39.3 41s17.59 41 39.3 41H864.1v82H274.62c-65.12 0-117.9-55.08-117.9-123v-615.1c0-45.3 35.19-82 78.6-82H864.1z" p-id="21620" fill="#f44336"></path></svg></div><p>机组</p></span>';
+var GTCon = '<span class="GTK_con"><div class="GTK_content"><div class="GTK_talk_load_new">加载更新机博</div><div class="GTK_talk_list"></div><div class="GTK_talk_load_old">加载更多</div></div></span>';
+var GitUrl = 'https://github.com/TOKdawn/gcores-talks-Viewer/blob/main/crawler/TID.html'
 var loadFlag = false
 var startTID = 1232; //已经加载的最新鸡脖 大值
 var endTID = 1232; //已经加载的最旧鸡脖 小值
@@ -58,7 +58,7 @@ var anchorTID = {// 远程获取锚点鸡脖ID 更新时间
 }
 var carouselsList = { //存储带轮播图机组信息
 }
-
+ 
 //初始化组件
 function onDocumentStart(){
   $('body').append($(GTbtn))
@@ -80,7 +80,7 @@ function onDocumentStart(){
   }
   addStyle();
 }
-
+ 
 function updataTID(){
   GM_xmlhttpRequest({
     method: 'GET',
@@ -211,7 +211,7 @@ function addStyle(){
   }
   `)
 }
-
+ 
 function showGTK() {
   $('.navLayout_nav').removeClass('gnav-hide')
   $('.pageContainer').hide() //阻止主页内容滚动影响导航栏隐藏
@@ -224,7 +224,7 @@ function showGTK() {
   })
   !loadFlag && loadData('NEW');
 }
-
+ 
 function hideGTK() {
   $('.pageContainer').show()
   $('.GTK_con').hide()
