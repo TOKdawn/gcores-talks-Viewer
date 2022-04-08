@@ -6,6 +6,7 @@ const cheerio = require('cheerio');
 
 const Gtalk = 'https://www.gcores.com/talks/'
 const GitUrl = 'https://github.com/TOKdawn/gcores-talks-Viewer/blob/main/crawler/TID.html'
+const intervalList = [100,50,25,10,5,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1] //加值率区间
 var  OLD_ID = ''
 const add=function(a,b){
   return a+b
@@ -14,15 +15,15 @@ const add=function(a,b){
 
 function setHTML(TID){
   if(!TID){
-    console.log("TID is null")
+    console.log("TID is null")    
     return 
   }
-  fs.writeFile('./TID.html', TID, err => {
+  fs.writeFile('./TID.html', parseInt(TID, 10).toString(), err => {
     if (err) {
       throw err
     } else {
       console.log("TID.html success")
-      console.log(htmlStr)
+      // console.log(htmlStr)
     }
   })
 }
@@ -61,9 +62,9 @@ function tryTID(TID){//检测TID要同时连续监测三个,因为存在一些�
           html += data
         })
         res.on('end', () => {
-          console.log('GTalk请求成功',(TID+i))
           let $ = cheerio.load(html);
-          let DOM = $('.aat_container');
+          let DOM = $('.aat_container').children().length;
+            console.log('DOM',DOM)
           if(DOM){
             resolve(1)
           }else{
@@ -76,22 +77,36 @@ function tryTID(TID){//检测TID要同时连续监测三个,因为存在一些�
   return promiseList
 }
 
-
-function donext(){
-  console.log('其他逻辑')
-}
 async function run(){
-  OLD_ID = await getTID() - 0
+  OLD_ID = await getTID() 
+  OLD_ID -= 0
   console.log('获取TID成功:',OLD_ID)
-  
-  Promise.all( tryTID(OLD_ID + 100)).then(res => {
-    if(res.reduce(add) >= 1){  //三个中有一个有效就成功
-      console.log('检测TID结果:', '成功')
-    }else{
-      console.log('检测TID结果:', '失败')
+  let searchFlag = true;
+  let addNum = 0; //初始增值
+  let INI = 0; //增值刻度
+  let tryFlag = true;// 检测标识
+  while(searchFlag){
+    addNum += intervalList[INI];
+    await Promise.all(tryTID(OLD_ID + addNum)).then(res => {
+      if(res.reduce(add) >= 1){  //三个中有一个有效就成功
+        console.log('检测成功:',res ,OLD_ID + addNum)
+        tryFlag = true
+      }else{
+        console.log('检测失败:',OLD_ID + addNum)
+        tryFlag = false
+      }
+    })
+    if(!tryFlag){ //如果超越边界
+      addNum -= intervalList[INI]; //还原成上次增值
+      INI++; //维度减小
     }
-  })
-  
+    if(!tryFlag && INI >= 9){ //结束条件
+      searchFlag = false
+    }
+  }
+  console.log('最终结果', OLD_ID + addNum);
+  setHTML(OLD_ID + addNum)
+  console.log('结束 结束')
 }
 
 
