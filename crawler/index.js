@@ -18,7 +18,7 @@ function setHTML(TID){
     console.log("TID is null")    
     return 
   }
-  fs.writeFile('./TID.html', parseInt(TID, 10).toString(), err => {
+  fs.writeFile('./crawler/TID.html', parseInt(TID, 10).toString(), err => {
     if (err) {
       throw err
     } else {

@@ -17,14 +17,8 @@ jobs:
       uses: actions/setup-node@v2.4.0
     - name: Install Dependence
       run: npm install
-    - name: CD crawler
-      run: cd ./crawler
-    - name: PWD 
-      run: pwd
-    - name: LS 
-      run: ls
     - name: updata HTML
-      run: node ./index.js
+      run: node ./crawler/index.js
 
     - name: Upload to this repo
       run: |
