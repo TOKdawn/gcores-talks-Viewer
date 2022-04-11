@@ -17,8 +17,10 @@ jobs:
       uses: actions/setup-node@v2.4.0
     - name: Install Dependence
       run: npm install
+    - name: CD crawler
+      run: cd crawler
     - name: updata HTML
-      run: node crawler
+      run: node index.js
 
     - name: Upload to this repo
       run: |
