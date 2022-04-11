@@ -41,13 +41,23 @@
 
 Made with [contrib.rocks](https://contrib.rocks).
 
-## 🗣 交流反馈
+## 🗣 readme
 
-
+核心逻辑为油猴脚本 /src/Gtalk.js
+锚点ID更新脚本为 /crawler/index.js
+Action 配置 /.GitHub/workflow/github-actions-demo.yml
+脚本通过访问Git库TID.html内容获取锚点ID后顺序获取机博进行数据拼接生成界面
+脚本定点自启动通过类二分算法查询机核主站,确定更新锚点机博ID
+GitHub做存储,GitHub Action管理执行脚本 
+成功在脱离服务器的情况下实现组件功能(才不是因为我手头没有服务器呢)
+python均为无用代码最后脚本还是拿node写的(Python异步好怪,赞美node)
 
 ### 更新记录
 
-- v1.1 🐞
+- v1.04 🐞增加单次获取机博数量为(10),增加可浏览机博总量(800)
+- v1.03 🐞编写GitHub Action实现更新锚点脚本整点自启动
+- v1.02 🐞更新获取锚点ID脚本
+- v1.01 🐞修复启动编辑器后机组按钮被遮挡问题
 - v1.0 👑发布
   
 </details>

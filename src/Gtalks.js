@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         机核网页端机组插件
 // @namespace    https://github.com/TOKdawn
-// @version      1.0.3
+// @version      1.0.4
 // @description  机核网页端查看机组辅助工具
 // @icon         data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImdmYXMiIGRhdGEtaWNvbj0iZyIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIG5hdkxheW91dF9zaWRlX2xvZ29fZyIgcm9sZT0iaW1nIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNiI+PGcgc3Ryb2tlPSJub25lIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMi4wMDAwMDAsIC0xNy4wMDAwMDApIiBmaWxsPSJjdXJyZW50Q29sb3IiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZD0iTTM1LjM0ODkwNTEsNDIuMzMzMzMzMyBDMjcuNzEwOTQ4OSw0Mi4zMzMzMzMzIDIyLDM3LjExMzU1MzEgMjIsMjkuNzM2MjYzNyBMMjIsMjkuNjY2NjY2NyBDMjIsMjIuNTY3NzY1NiAyNy42MDU4Mzk0LDE3IDM1LjIwODc1OTEsMTcgQzM5LjUxODI0ODIsMTcgNDIuNTY2NDIzNCwxOC4zMjIzNDQzIDQ1LjE1OTEyNDEsMjAuNTQ5NDUwNSBMNDEuMTY0OTYzNSwyNS4zMTY4NDk4IEMzOS40MTMxMzg3LDIzLjg1NTMxMTQgMzcuNjYxMzEzOSwyMy4wMjAxNDY1IDM1LjI0Mzc5NTYsMjMuMDIwMTQ2NSBDMzEuNzA1MTA5NSwyMy4wMjAxNDY1IDI4Ljk3MjI2MjgsMjUuOTc4MDIyIDI4Ljk3MjI2MjgsMjkuNzAxNDY1MiBMMjguOTcyMjYyOCwyOS43NzEwNjIzIEMyOC45NzIyNjI4LDMzLjcwMzI5NjcgMzEuNzQwMTQ2LDM2LjUyMTk3OCAzNS42MjkxOTcxLDM2LjUyMTk3OCBDMzcuMjc1OTEyNCwzNi41MjE5NzggMzguNTM3MjI2MywzNi4xNzM5OTI3IDM5LjU1MzI4NDcsMzUuNTEyODIwNSBMMzkuNTUzMjg0NywzMi41NTQ5NDUxIEwzNC43MTgyNDgyLDMyLjU1NDk0NTEgTDM0LjcxODI0ODIsMjcuNjEzNTUzMSBMNDYsMjcuNjEzNTUzMSBMNDYsMzguNTc1MDkxNiBDNDMuNDA3Mjk5Myw0MC42OTc4MDIyIDM5Ljc5ODU0MDEsNDIuMzMzMzMzMyAzNS4zNDg5MDUxLDQyLjMzMzMzMzMgWiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+
 // @author       TOKdawn
@@ -237,7 +237,7 @@ function loadData(type) {
   var PromiseList = []
   var url = ''
   if(type == 'Down'){
-    if( anchorTID.id - endTID > 200 ){//已经加载200条了
+    if( anchorTID.id - endTID > 500 ){//已经加载200条了
       $('.GTK_talk_load_old').text('无法加载更多...')
       return;
     }
