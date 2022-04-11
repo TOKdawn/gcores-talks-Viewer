@@ -1,8 +1,8 @@
 name: Node.js CI
 
 on:
-#   schedule:
-#      - cron: '0,30 * * * *'  
+  schedule: 
+     - cron: '0 0-17 * * *'   #此为美国时区 对应为 中国每天的8点到凌晨1点  整点更新
   push:
 
 jobs:
