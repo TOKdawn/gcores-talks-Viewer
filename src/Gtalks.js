@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         机核网页端机组插件
 // @namespace    https://github.com/TOKdawn
-// @version      1.0.0
+// @version      1.0.3
 // @description  机核网页端查看机组辅助工具
 // @icon         data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImdmYXMiIGRhdGEtaWNvbj0iZyIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIG5hdkxheW91dF9zaWRlX2xvZ29fZyIgcm9sZT0iaW1nIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNiI+PGcgc3Ryb2tlPSJub25lIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMi4wMDAwMDAsIC0xNy4wMDAwMDApIiBmaWxsPSJjdXJyZW50Q29sb3IiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZD0iTTM1LjM0ODkwNTEsNDIuMzMzMzMzMyBDMjcuNzEwOTQ4OSw0Mi4zMzMzMzMzIDIyLDM3LjExMzU1MzEgMjIsMjkuNzM2MjYzNyBMMjIsMjkuNjY2NjY2NyBDMjIsMjIuNTY3NzY1NiAyNy42MDU4Mzk0LDE3IDM1LjIwODc1OTEsMTcgQzM5LjUxODI0ODIsMTcgNDIuNTY2NDIzNCwxOC4zMjIzNDQzIDQ1LjE1OTEyNDEsMjAuNTQ5NDUwNSBMNDEuMTY0OTYzNSwyNS4zMTY4NDk4IEMzOS40MTMxMzg3LDIzLjg1NTMxMTQgMzcuNjYxMzEzOSwyMy4wMjAxNDY1IDM1LjI0Mzc5NTYsMjMuMDIwMTQ2NSBDMzEuNzA1MTA5NSwyMy4wMjAxNDY1IDI4Ljk3MjI2MjgsMjUuOTc4MDIyIDI4Ljk3MjI2MjgsMjkuNzAxNDY1MiBMMjguOTcyMjYyOCwyOS43NzEwNjIzIEMyOC45NzIyNjI4LDMzLjcwMzI5NjcgMzEuNzQwMTQ2LDM2LjUyMTk3OCAzNS42MjkxOTcxLDM2LjUyMTk3OCBDMzcuMjc1OTEyNCwzNi41MjE5NzggMzguNTM3MjI2MywzNi4xNzM5OTI3IDM5LjU1MzI4NDcsMzUuNTEyODIwNSBMMzkuNTUzMjg0NywzMi41NTQ5NDUxIEwzNC43MTgyNDgyLDMyLjU1NDk0NTEgTDM0LjcxODI0ODIsMjcuNjEzNTUzMSBMNDYsMjcuNjEzNTUzMSBMNDYsMzguNTc1MDkxNiBDNDMuNDA3Mjk5Myw0MC42OTc4MDIyIDM5Ljc5ODU0MDEsNDIuMzMzMzMzMyAzNS4zNDg5MDUxLDQyLjMzMzMzMzMgWiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+
 // @author       TOKdawn
@@ -242,7 +242,7 @@ function loadData(type) {
       return;
     }
   }else if(type == 'TOP'){
-    if(startTID > topTID.id - 5){//最新机博不足
+    if(startTID > topTID.id - 10){//最新机博不足
       $('.GTK_talk_load_new').text('已加载到最新机博...')
       return;
     }
@@ -250,7 +250,7 @@ function loadData(type) {
     startTID =  anchorTID.id
     loadFlag = true
   }
-  for(var index = 0; index < 5; index++){ //每次加载5条
+  for(var index = 0; index < 10; index++){ //每次加载5条
     PromiseList[index] = new Promise(function(resolve, reject){//构建Promise
       setTimeout((i,type)=>{
         var TID = ''
@@ -300,8 +300,8 @@ function loadData(type) {
   }
   if(type == 'Down'){
     Promise.all(PromiseList).then(Pres => {
-      if(Pres.reduce(add) >= 2){ //成功两条就算 因为有些删除的机博ID占用了但是没内容
-        endTID -= 5 //更新已加载的最后一条ID
+      if(Pres.reduce(add) >= 4){ //成功两条就算 因为有些删除的机博ID占用了但是没内容
+        endTID -= 10 //更新已加载的最后一条ID
         tklist.forEach(tk => {
           var dom =$('<div class="GTK_talk_item" data-tid='+ tk.id +'></div>')
           DOM.append( dom.append(tk.dom)) //插入到最后
@@ -315,8 +315,8 @@ function loadData(type) {
     });
   }else if(type == 'TOP'){
     Promise.all(PromiseList).then(Pres => {
-      if(Pres.reduce(add) >= 2){ //成功两条就算 因为有些删除的机博ID占用了但是没内容
-        startTID += 5 //更新已加载的最新一条ID
+      if(Pres.reduce(add) >= 4){ //成功4条就算 因为有些删除的机博ID占用了但是没内容
+        startTID += 10 //更新已加载的最新一条ID
         tklist.forEach(tk => {
           var dom =$('<div class="GTK_talk_item" data-tid='+ tk.id +'></div>')
           DOM.prepend( dom.append(tk.dom)) //插入到最前面
@@ -331,8 +331,8 @@ function loadData(type) {
     });
   }else {
     Promise.all(PromiseList).then(Pres => {
-      if(Pres.reduce(add) >= 2){ //成功两条就算 因为有些删除的机博ID占用了但是没内容
-        endTID = anchorTID.id - 5 //更新已加载的最后一条ID
+      if(Pres.reduce(add) >= 4){ //成功4条就算 因为有些删除的机博ID占用了但是没内容
+        endTID = anchorTID.id - 10 //更新已加载的最后一条ID
         tklist.forEach(tk => {
           var dom =$('<div class="GTK_talk_item" data-tid='+ tk.id +'></div>')
           DOM.append(dom.append(tk.dom))
