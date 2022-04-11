@@ -44,12 +44,19 @@ Made with [contrib.rocks](https://contrib.rocks).
 ## 🗣 readme
 
 核心逻辑为油猴脚本 /src/Gtalk.js
+
 锚点ID更新脚本为 /crawler/index.js
+
 Action 配置 /.GitHub/workflow/github-actions-demo.yml
+
 脚本通过访问Git库TID.html内容获取锚点ID后顺序获取机博进行数据拼接生成界面
+
 脚本定点自启动通过类二分算法查询机核主站,确定更新锚点机博ID
+
 GitHub做存储,GitHub Action管理执行脚本 
+
 成功在脱离服务器的情况下实现组件功能(才不是因为我手头没有服务器呢)
+
 python均为无用代码最后脚本还是拿node写的(Python异步好怪,赞美node)
 
 ### 更新记录
