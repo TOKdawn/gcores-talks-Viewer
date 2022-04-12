@@ -4,7 +4,6 @@ on:
   schedule: 
      - cron: '0 0-17 * * *'   #此为美国时区 对应为 中国每天的8点到凌晨1点  整点更新
   push:
-
 jobs:
   job_1:
     name: Node Crawler
@@ -22,7 +21,7 @@ jobs:
 
     - name: Upload to this repo
       run: |
-        git config --global user.name "Dawn inShadow"
+        git config --global user.name "Action Bot"
         git config --global user.email "dawninshadow0.0@gmail.com"
         git add crawler && echo A
         git commit -m 'upload TID result' && echo B
