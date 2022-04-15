@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         机核网页端机组插件
 // @namespace    https://github.com/TOKdawn
-// @version      1.0.5
+// @version      1.1.0
 // @description  机核网页端查看机组辅助工具
 // @icon         data:image/svg+xml;base64,PHN2ZyBhcmlhLWhpZGRlbj0idHJ1ZSIgZm9jdXNhYmxlPSJmYWxzZSIgZGF0YS1wcmVmaXg9ImdmYXMiIGRhdGEtaWNvbj0iZyIgY2xhc3M9InN2Zy1pbmxpbmUtLWZhIG5hdkxheW91dF9zaWRlX2xvZ29fZyIgcm9sZT0iaW1nIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNiI+PGcgc3Ryb2tlPSJub25lIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMi4wMDAwMDAsIC0xNy4wMDAwMDApIiBmaWxsPSJjdXJyZW50Q29sb3IiIGZpbGwtcnVsZT0ibm9uemVybyI+PHBhdGggZD0iTTM1LjM0ODkwNTEsNDIuMzMzMzMzMyBDMjcuNzEwOTQ4OSw0Mi4zMzMzMzMzIDIyLDM3LjExMzU1MzEgMjIsMjkuNzM2MjYzNyBMMjIsMjkuNjY2NjY2NyBDMjIsMjIuNTY3NzY1NiAyNy42MDU4Mzk0LDE3IDM1LjIwODc1OTEsMTcgQzM5LjUxODI0ODIsMTcgNDIuNTY2NDIzNCwxOC4zMjIzNDQzIDQ1LjE1OTEyNDEsMjAuNTQ5NDUwNSBMNDEuMTY0OTYzNSwyNS4zMTY4NDk4IEMzOS40MTMxMzg3LDIzLjg1NTMxMTQgMzcuNjYxMzEzOSwyMy4wMjAxNDY1IDM1LjI0Mzc5NTYsMjMuMDIwMTQ2NSBDMzEuNzA1MTA5NSwyMy4wMjAxNDY1IDI4Ljk3MjI2MjgsMjUuOTc4MDIyIDI4Ljk3MjI2MjgsMjkuNzAxNDY1MiBMMjguOTcyMjYyOCwyOS43NzEwNjIzIEMyOC45NzIyNjI4LDMzLjcwMzI5NjcgMzEuNzQwMTQ2LDM2LjUyMTk3OCAzNS42MjkxOTcxLDM2LjUyMTk3OCBDMzcuMjc1OTEyNCwzNi41MjE5NzggMzguNTM3MjI2MywzNi4xNzM5OTI3IDM5LjU1MzI4NDcsMzUuNTEyODIwNSBMMzkuNTUzMjg0NywzMi41NTQ5NDUxIEwzNC43MTgyNDgyLDMyLjU1NDk0NTEgTDM0LjcxODI0ODIsMjcuNjEzNTUzMSBMNDYsMjcuNjEzNTUzMSBMNDYsMzguNTc1MDkxNiBDNDMuNDA3Mjk5Myw0MC42OTc4MDIyIDM5Ljc5ODU0MDEsNDIuMzMzMzMzMyAzNS4zNDg5MDUxLDQyLjMzMzMzMzMgWiI+PC9wYXRoPjwvZz48L2c+PC9zdmc+
 // @author       TOKdawn
@@ -40,14 +40,19 @@ var add=function(a,b){
 }
  
 var GURL =  'https://www.gcores.com/talks/'
- 
+var CURL =  'https://www.gcores.com/gapi/v1/talks/'
 var domparser = new DOMParser()
 var GTbtn = '<span class="globalActions_item GTK_btn"  target="_blank"><div><svg t="1648725115646" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="21619" width="24" height="24"><path d="M677.6 389.78v-82H343.21v82z m186.5 369.07H274.62c-21.71 0-39.3 18.36-39.3 41s17.59 41 39.3 41H864.1v82H274.62c-65.12 0-117.9-55.08-117.9-123v-615.1c0-45.3 35.19-82 78.6-82H864.1z" p-id="21620" fill="#f44336"></path></svg></div><p>机组</p></span>';
 var GTCon = '<span class="GTK_con"> <div class="GTK_content"><div class="GTK_talk_go_top">↑回到顶部↑</div><div class="GTK_talk_load_new">加载更新机博</div><div class="GTK_talk_list"></div><div class="GTK_talk_load_old">加载更多</div></div></span>';
 var GitUrl = 'https://github.com/TOKdawn/gcores-talks-Viewer/blob/main/crawler/TID.html'
+var GTcommit = '<div class="GTK_commit"><ul style="margin-bottom: 0px;" class="GTK_commit_list">';
 var loadFlag = false
 var startTID = 1232; //已经加载的最新鸡脖 大值
 var endTID = 1232; //已经加载的最旧鸡脖 小值
+var commitFlag = {}
+var STEP = 10; //每次加载的机组数
+var MAX = 500; //最大加载的机组数
+var MIN = 4; //最小成功数
 var topTID = { // 目前最新的鸡脖ID 更新时间 最大值
   id: 999999999,
   time: '2019-01-01 00:00:00'
@@ -100,7 +105,7 @@ function updataTID(fisrtFlag){
             if(fisrtFlag){
               anchorTID.id = gitTID.id //没有本地缓存ID直接用远程ID
             }else{
-              if(gitTID.id - anchorTID.id > 10){//远程ID大于本地ID 则显示回到顶部
+              if(gitTID.id - anchorTID.id > STEP){//远程ID大于本地ID 则显示回到顶部
                 $('.GTK_talk_go_top').show()
               }else{
                 $('.GTK_talk_go_top').hide()//本地的大于远程ID 则隐藏回到顶部
@@ -238,6 +243,46 @@ function addStyle(){
     border-bottom: 1px solid #f4f4f4;
   }
   `)
+  GM_addStyle(`
+    .talk_actions{
+      flex-wrap: wrap;
+  }`)
+  GM_addStyle(`
+    .GTK_commit{
+      border-top: 1px solid #f4f4f4;
+      flex: 1 1 100%;
+      height: auto;
+  }`)
+  GM_addStyle(`
+  .GTK_commit_img{
+    width: 20px;
+    height: 20px;
+    line-height: 19px;
+    text-align: center;
+    border-radius: 50%;
+    font-weight: 800;
+    display: inline-block;
+    background-color: #f44336;
+    color: #fff;
+    margin-right: 10px;
+  }`)
+  GM_addStyle(`
+  .GTK_commit_item{
+    margin-top: 5px;
+    line-height: 28px;
+    text-align: left;
+    margin-right: 12px;
+   
+  }`)
+  GM_addStyle(`
+  .GTK_sub_commit{
+    border-bottom: 2px dashed #eee;
+    padding-left: 30px;
+  }`)
+  GM_addStyle(`
+  .GTK_main_commit{
+    border-bottom: 2px dashed #eee;
+  }`)
 }
  
 function showGTK() {
@@ -251,7 +296,7 @@ function showGTK() {
   $('.GTK_con').on('click',function(e){
     e.stopPropagation() //阻止冒泡
   })
-  !loadFlag && loadData('NEW');
+  loadData('NEW');
 }
  
 function hideGTK() {
@@ -273,20 +318,19 @@ function loadData(type) {
   var PromiseList = []
   var url = ''
   if(type == 'Down'){
-    if( anchorTID.id - endTID > 500 ){//已经加载200条了
+    if( anchorTID.id - endTID > MAX ){//已经加载200条了
       $('.GTK_talk_load_old').text('无法加载更多...')
       return;
     }
   }else if(type == 'TOP'){
-    if(startTID > topTID.id - 10){//最新机博不足
+    if(startTID > topTID.id - STEP){//最新机博不足
       $('.GTK_talk_load_new').text('已加载到最新机博...')
       return;
     }
   }else {
     startTID =  anchorTID.id
-    loadFlag = true
   }
-  for(var index = 0; index < 10; index++){ //每次加载5条
+  for(var index = 0; index < STEP; index++){ //每次加载5条
     PromiseList[index] = new Promise(function(resolve, reject){//构建Promise
       setTimeout((i,type)=>{
         var TID = ''
@@ -336,8 +380,8 @@ function loadData(type) {
   }
   if(type == 'Down'){
     Promise.all(PromiseList).then(Pres => {
-      if(Pres.reduce(add) >= 4){ //成功两条就算 因为有些删除的机博ID占用了但是没内容
-        endTID -= 10 //更新已加载的最后一条ID
+      if(Pres.reduce(add) >= MIN){ //成功两条就算 因为有些删除的机博ID占用了但是没内容
+        endTID -= STEP //更新已加载的最后一条ID
         tklist.forEach(tk => {
           var dom =$('<div class="GTK_talk_item" data-tid='+ tk.id +'></div>')
           DOM.append( dom.append(tk.dom)) //插入到最后
@@ -351,8 +395,8 @@ function loadData(type) {
     });
   }else if(type == 'TOP'){
     Promise.all(PromiseList).then(Pres => {
-      if(Pres.reduce(add) >= 4){ //成功4条就算 因为有些删除的机博ID占用了但是没内容
-        startTID += 10 //更新已加载的最新一条ID
+      if(Pres.reduce(add) >= MIN){ //成功4条就算 因为有些删除的机博ID占用了但是没内容
+        startTID += STEP//更新已加载的最新一条ID
         tklist.forEach(tk => {
           var dom =$('<div class="GTK_talk_item" data-tid='+ tk.id +'></div>')
           DOM.prepend( dom.append(tk.dom)) //插入到最前面
@@ -368,8 +412,8 @@ function loadData(type) {
     });
   }else {
     Promise.all(PromiseList).then(Pres => {
-      if(Pres.reduce(add) >= 4){ //成功4条就算 因为有些删除的机博ID占用了但是没内容
-        endTID = anchorTID.id - 10 //更新已加载的最后一条ID
+      if(Pres.reduce(add) >= MIN){ //成功4条就算 因为有些删除的机博ID占用了但是没内容
+        endTID = anchorTID.id - STEP //更新已加载的最后一条ID
         tklist.forEach(tk => {
           var dom =$('<div class="GTK_talk_item" data-tid='+ tk.id +'></div>')
           DOM.append(dom.append(tk.dom))
@@ -388,6 +432,54 @@ function loadData(type) {
 function carouselsInit(){
   carouselsList = {} //初始化数据
   $('.slick-arrow').off().on('click',imgChange)
+  $('.talk_actions').off().on('click',showComment)
+}
+function showComment(){
+  var index, talkDOM;
+  var Tid,html = '';
+  TDOM =  $(this).parents('.GTK_talk_item')
+  TDOM && (Tid = TDOM.attr('data-tid'))
+  TDOM && (talkDOM = TDOM.find('.talk_actions'))
+  talkDOM && (index = talkDOM.find('.u_plainButton')[1].innerText) //获取评论数量
+  if(isNaN(index-0)){//评论是文本不是数字
+    return
+  }
+  if(commitFlag[Tid] || loadFlag){
+    return
+  }
+  loadFlag = true
+  html+=GTcommit
+  GM_xmlhttpRequest({
+    method: 'GET',
+    url: CURL+ Tid +'?include=comments', //获取对应编号鸡脖
+    timeout: 2000,
+    headers:{
+      'Content-Type': 'application/vnd.api+json'
+    },
+    onload: function(xhr) {
+      loadFlag = false
+      var data = JSON.parse(xhr.responseText)
+      for(var i = 0;i < data.included.length;i++){
+        var item = data.included[i]
+        html+= '<li class="GTK_commit_item '+ (item.attributes.depth > 0 ?"GTK_sub_commit":"GTK_main_commit") + '"  cid = '+item.id +'><span class="GTK_commit_img">G</span>' + item.attributes.body + '</li>'
+      }
+      html+='</ul></div>'
+      talkDOM && talkDOM.append($(html))
+      commitFlag[Tid] = true
+    },
+    onerror: function (xhr) {
+      loadFlag = false
+      console.log('拿取gitID失败', xhr,'id:',anchorTID.id - i);
+    },
+    ontimeout: function (xhr) {
+      loadFlag = false
+      console.log('拿取gitID超时:', xhr, 'id:',anchorTID.id - i);
+    },
+    onabort:function (xhr) {
+      loadFlag = false
+      console.log('拿取gitID中止:', xhr, 'id:',anchorTID.id - i);
+    }
+  })
 }
 function imgChange(){
   var button,target,TDOM,indexDOM,trackDOM;
